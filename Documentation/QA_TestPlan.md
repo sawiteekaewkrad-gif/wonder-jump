@@ -62,6 +62,7 @@ Only the owner can mark device or multiplayer tests PASS.
 | QA-A-04 | Headless menu 915×412: logo, 6 concept-art characters, tap Koko → card with portrait | L4 | Visible, no console errors | **PASS** 2026-11-01 (62 draws vs 195) |
 | QA-A-05 | Headless level: Koko run right / turn left (mirror), Miyu attack (spin + arc), double jump (cartwheel) | L4 | Correct facing; poses visible | **PASS** 2026-11-01 (first run showed the art drawn facing right → `artFacing` fixed to +1) |
 | QA-A-06 | `?chibi=primitive` fallback | L4 | Primitive chibis, 195 draws | **PASS** 2026-11-01 |
+| QA-A-07 | `android-apk.yml` on the art commit | L5 | APK published | **PASS** 2026-11-01: build 0.1.3 (run 3) |
 | QA-A-D01 | Device: characters look like the concept art, readable size, turning/flip OK, FPS | L6 | Owner judgement | NOT RUN |
 
 ## 5. Later phases (outline)
