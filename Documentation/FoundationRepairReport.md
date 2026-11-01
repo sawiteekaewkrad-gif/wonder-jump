@@ -90,7 +90,7 @@ What the stub pass does **not** prove: that Unity 6's API matches the signatures
 2. Install packages: Input System, Netcode for GameObjects, Multiplayer Services, Cinemachine, Multiplayer Play Mode.
 3. Run QA-P0-01 → QA-P0-17 and the Test Runner (QA-P0-A01…A05); record results in `QA_TestPlan.md`.
 4. Build the Bootstrap scene to a physical Android phone (QA-P0-D01…D03).
-5. Answer Q1 (package name) and Q2 (co-op camera) before Phase 2.
+5. Answer Q1 (package name) before release. Q2 answered 2026-11-01: each phone follows its own player (Blueprint D-05, §4.5).
 
 ## 7. Asset generation instructions (short)
 1. Open the project (URP active). **Wonder Jump → Generate Complete 3D Asset Pack.**

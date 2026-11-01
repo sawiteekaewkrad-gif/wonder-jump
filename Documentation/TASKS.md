@@ -34,7 +34,7 @@ Owner: **C** = Claude · **U** = owner
 | 0.34 | P0 | Test Runner: EditMode 22 + PlayMode 3 green | U | TODO | |
 | 0.35 | P0 | Bootstrap APK on physical device, landscape, airplane mode (QA-P0-D01…03) | U | TODO | Device: `______` FPS: `___` |
 | 0.36 | P0 | Commit `ProjectSettings/`, `Packages/`, `.meta` files, generated assets + manifest | U | TODO | |
-| 0.37 | P1 | Answer Q1 (package name), Q2 (co-op camera) | U | TODO | |
+| 0.37 | P1 | Answer Q1 (package name), Q2 (co-op camera) | U | DOING | Q2 answered 2026-11-01: per-phone follow (D-05). Q1 open |
 | 0.38 | P1 | Owner approves Phase 0 → Phase 1 may start | U | TODO | |
 
 ## Phase 1 — Movement & Controls (starts after 0.38)
@@ -60,7 +60,10 @@ Owner: **C** = Claude · **U** = owner
 | 2.03 | P0 | Player NetworkObject, owner-authoritative transform, replicated `PlayerStateId` | C |
 | 2.04 | P0 | Lobby UI: host, join code, errors | C |
 | 2.05 | P0 | Disconnect / host-left handling → back to menu, `GameAuthority` reset | C |
-| 2.06 | P1 | Co-op camera per Q2 | C |
+| 2.06 | P0 | Per-phone follow camera (D-05): local player only, level bounds | C |
+| 2.08 | P0 | Off-screen partner indicator (edge arrow + icon + distance) | C |
+| 2.09 | P0 | Catch-up rule: host-decided teleport to a safe point (25 m / 3 s / 1.5 s i-frames, tunable) | C |
+| 2.10 | P1 | Enemy activation around either player (host), so the client never meets frozen enemies | C |
 | 2.07 | P0 | Test: Multiplayer Play Mode + 2 phones on different networks | U |
 
 ## Phase 3 — Characters

@@ -62,7 +62,7 @@ Status values: `NOT RUN` · `PASS` · `FAIL` · `BLOCKED`. Record who ran each t
 | Phase | Key test themes |
 |---|---|
 | 1 | Joystick dead-zone/size, jump buffer & coyote timing, slopes, moving platforms, 60 FPS with graybox level |
-| 2 | Host/join by code, different networks (Wi-Fi + 4G), host leaves, client leaves, reconnect, airplane-mode single player |
+| 2 | Host/join by code, different networks (Wi-Fi + 4G), host leaves, client leaves, reconnect, airplane-mode single player; per-phone camera follows only the local player; partner arrow appears off-screen; catch-up teleport after 25 m / 3 s never lands in a hazard or gap; enemies near the client are active |
 | 3 | Selection sync, duplicate pick rules, remote sees the correct character |
 | 4 | Collect-once across 2 players, checkpoints shared, hazards, KO/revive, level complete on both |
 | 5 | Enemy state identical on both phones, stomp vs side hit |

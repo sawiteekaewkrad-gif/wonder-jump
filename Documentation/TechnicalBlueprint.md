@@ -2,9 +2,9 @@
 
 | Item | Value |
 |---|---|
-| Version | 0.2 (Phase 0 Foundation Repair) |
+| Version | 0.3 (Phase 0 Foundation Repair; D-05 decided) |
 | Date | 2026-11-01 |
-| Status | Architecture contracts written; decisions D-02/D-03/D-04 adopted per Phase 0 brief; **D-05 still OPEN** |
+| Status | Architecture contracts written; decisions D-02/D-03/D-04 adopted per Phase 0 brief; D-05 decided by owner 2026-11-01 |
 | Related | `FoundationRepairReport.md`, `AssetManifest.md`, `TASKS.md`, `QA_TestPlan.md`, `AssetPackAudit.md` |
 
 ## 0. Requirements baseline
@@ -37,7 +37,7 @@
 | D-02 | Player = **custom kinematic motor** (capsule casts + kinematic Rigidbody, Z frozen), not dynamic physics or CharacterController | **Adopted** | Tight platformer feel and deterministic enough for owner-authoritative netcode. Cost: more code in Phase 1. Unity's CharacterController was rejected: no Rigidbody (so no trigger callbacks unless one is added), and fixed up-axis assumptions complicate moving platforms |
 | D-03 | Co-op = **host/client over Unity Relay** (NGO + Multiplayer Services Sessions). Player movement owner-authoritative; shared events host-authoritative | **Adopted** | No server cost; responsive local control. Cost: session ends if the host leaves (handled by a clear UX) |
 | D-04 | **One gameplay code path** for single player and co-op, gated by `GameAuthority` | **Adopted** | Prevents the "retrofit netcode" rewrite. See §4.3 for how offline avoids any network dependency |
-| D-05 | Co-op camera: shared framing with max-separation clamp (recommended) vs per-phone follow + leash | **OPEN (Q2)** | Needed by Phase 2 |
+| D-05 | Co-op camera: **each phone follows its own player** (+ partner indicator + catch-up rule, §4.5) | **Decided by owner (2026-11-01)** | Each player always sees their own character at full size. Cost: players can drift apart, so the catch-up rule, an off-screen partner indicator, and host-side enemy activation around *both* players are required |
 | D-06 | Each level is its own scene, loaded additively into `Gameplay`; co-op uses NGO's scene manager | Adopted | Clean memory per level; both peers load the same scene |
 | D-07 | Data = ScriptableObjects; IDs = enums with fixed numeric values (`CharacterId`, `WorldId`), levels = `LevelId` "W{w}_L{l}" | **Adopted, implemented** | Safe for save files and network messages |
 | D-08 | Local JSON save, `schemaVersion`, atomic write; per-player in co-op | Adopted (schema written) | Cloud save post-MVP |
@@ -135,6 +135,19 @@ sequenceDiagram
   Note over H,C: Host leaves → client shown "Host left", returns to menu, GameAuthority = Offline
 ```
 
+### 4.5 Co-op camera and separation (D-05)
+| Rule | Design (default values are proposals, tunable in a config asset) | Authority |
+|---|---|---|
+| Camera | Each phone's Cinemachine camera follows **only the local player**, clamped to level bounds. The remote player is rendered normally whenever in view | Local |
+| Partner indicator | When the partner is off-screen: an arrow on the screen edge with their character icon and distance (m) | Local |
+| Catch-up (leash) | If the players are > **25 m** apart horizontally for > **3 s**, the trailing player is teleported to a safe grounded point near the leader, with **1.5 s** of invulnerability + VFX | **Host** decides and picks the safe point; the owner client applies `IPlayerMotor.Teleport` |
+| Never teleport into danger | Safe point = last grounded position of the leader that is not a hazard, not over a gap, and not inside an enemy | Host |
+| Enemy activation | Host simulates enemies within an activation radius of **either** player (not just the host's view); otherwise the client meets frozen enemies | Host |
+| Checkpoints | Activated by either player; respawn for both moves forward (already in `ICheckpointService`) | Host |
+| Level end | Open question Q7 | Host |
+
+Contract impact: `ICameraTargetGroup` stays (single target per phone). Phase 2 adds `ICoopLeashService` and `IPartnerIndicator`; enemy brains get a "near any player" activation check.
+
 ## 5. Scene flow
 `Bootstrap → MainMenu → (Single Player → CharacterSelect) | (Host/Join → Lobby → CharacterSelect) → Gameplay + Level (additive) → WorldMap`.
 Phase 0 delivers `Bootstrap` only (menu: Setup/Create Bootstrap Scene).
@@ -193,7 +206,8 @@ Placeholder characters are 13–16 renderers each (~7–9k tris from default pri
 | # | Question | Blocks |
 |---|---|---|
 | Q1 | Android package name | Device build signing / Play |
-| Q2 | Co-op camera (D-05) | Phase 2 |
+| Q2 | ~~Co-op camera~~ **Answered: per-phone follow (D-05)** | — |
+| Q7 | Level end in co-op: complete when the first player reaches the goal, or when both do (with a countdown/teleport for the trailing player)? | Phase 4 |
 | Q3 | Budget for AI 3D tools | Phase 7 |
 | Q4 | Co-op death rules (shared lives / bubble revive / independent) | Phase 4 |
 | Q5 | Do characters differ in gameplay? | Phase 3 |
