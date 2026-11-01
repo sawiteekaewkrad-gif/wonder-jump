@@ -54,7 +54,8 @@ Status values: `NOT RUN` · `PASS` · `FAIL` · `BLOCKED`. Record who ran each t
 ### 3.3 CI (GitHub Actions, real Unity)
 | ID | Check | Expected | Status |
 |---|---|---|---|
-| QA-P0-C01 | Job `check-secrets` | Passes once the 3 secrets are set | NOT RUN |
+| QA-P0-C01 | Job `check-secrets` | Passes once the 3 secrets are set | PASS (2026-11-01) |
+| QA-P0-C01b | License activation in GameCI (Personal .ulf, file method) | Activates | **FAIL / BLOCKED** (2026-11-01): `Code 400 TimeStamp validation failed` on 6000.3.27f1 and 6000.0.75f1 with a .ulf issued the same day (StartDate 2026-11-01T00:00:00, UTC times, so not a timezone issue). Matches open issue game-ci/unity-test-runner#336. Project code never reached the compiler |
 | QA-P0-C02 | Job `tests`: compile + EditMode 23 + PlayMode 3 | All green; results in check "Unity test results" | NOT RUN |
 | QA-P0-C03 | Job `android`: log steps 1/7…7/7, `Build Succeeded` | Artifact `WonderJump-Android-APK` contains `WonderJump.apk` | NOT RUN |
 

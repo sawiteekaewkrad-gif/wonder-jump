@@ -107,6 +107,16 @@ What the stub pass does **not** prove: that Unity 6's API matches the signatures
 - Stub results now: 18/18 pure tests pass; builder smoke 596 checks PASS.
 - **Blocker:** the owner must add the Unity Personal license secrets (README). Claude cannot and should not handle the password.
 
+## 7c. CI license blocker (2026-11-01)
+- Secrets set by the owner. `check-secrets` passes.
+- GameCI file-based activation of the Unity Personal `.ulf` fails with `Code 400 TimeStamp validation failed`:
+  - fails on both 6000.3.27f1 and 6000.0.75f1 images
+  - the .ulf was issued the same day, with dates in UTC, so a timezone mismatch is ruled out
+  - the same error is reported in the open issue game-ci/unity-test-runner#336 (Unity 6.3, Oct 2026)
+- **Result:** no Unity compile or test has happened yet. Verification level stays at stub-compiled.
+- Also note: a Personal .ulf has a StopDate one month after issue, so even when CI works the secret must be refreshed monthly.
+- **Recommended fallback:** local build with Unity 6000.3.27f1 + Android Build Support, using menu Wonder Jump → Build → Build Android APK.
+
 ## 8. Next recommended phase (after approval): Phase 1, Movement & Controls
 Scope: Input actions; **Crystal Virtual Joystick** (purple/gold, floating/fixed, dead-zone, size setting); jump/action buttons; `KinematicMotor` implementing `IPlayerMotor` (run, accel/decel, variable jump, coyote, buffer, slopes, moving platforms) with `IGroundProbe`; layer collision matrix; follow camera; graybox test level from generated platforms; EditMode tests for the motor using a fake probe; device test at 60 FPS.
 Not in Phase 1: netcode, enemies, levels, art.

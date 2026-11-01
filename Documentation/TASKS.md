@@ -31,7 +31,7 @@ Owner: **C** = Claude · **U** = owner
 ### Owner gate (Phase 0 is DONE only when all of these pass)
 | ID | Pri | Task | Own | Status | Record |
 |---|---|---|---|---|---|
-| 0.29 | P0 | Add GitHub secrets UNITY_LICENSE / UNITY_EMAIL / UNITY_PASSWORD (README) → Claude triggers and monitors CI | U | TODO | |
+| 0.29 | P0 | Add GitHub secrets UNITY_LICENSE / UNITY_EMAIL / UNITY_PASSWORD (README) → Claude triggers and monitors CI | U | BLOCKED | Secrets added 2026-11-01; GameCI Personal activation fails (`TimeStamp validation failed`, game-ci#336). Fallback: local build (0.30) |
 | 0.30 | P0 | Install Unity 6000.3.27f1 + Android Build Support (for local work) | U | TODO | |
 | 0.31 | P0 | Clone repo, open with Unity Hub (README), Ensure URP Pipeline | U | TODO | |
 | 0.32 | P0 | QA-P0-01 compile: 0 errors (paste any errors to Claude) | U | TODO | |
