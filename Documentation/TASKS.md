@@ -18,7 +18,7 @@ Generator repair, contracts, tests and the GameCI pipeline were delivered. Unity
 | W.05 | P0 | Showcase scene (6 chars, items, enemies, tap-to-hop, character card, FPS HUD, rotate overlay) | C | REVIEW | Headless Chromium screenshots reviewed |
 | W.06 | P0 | Fix v1 defect: faces hidden inside the hair sphere | C | DONE | Screenshot |
 | W.07 | P0 | Capacitor Android: landscape, fullscreen, CI version codes | C | REVIEW | Needs the CI APK |
-| W.08 | P0 | CI: `ci.yml` + `android-apk.yml` (artifact + Latest APK release) | C | REVIEW | First run pending |
+| W.08 | P0 | CI: `ci.yml` + `android-apk.yml` (artifact + Latest APK release) | C | DONE | APK 0.1.1 published (5.0 MB) |
 | W.09 | P0 | Docs: README, CLAUDE, Blueprint v1.0, ArtDirection, TASKS, QA, AssetManifest | C | DONE | |
 | W.10 | P0 | **Install Latest APK on a phone; check landscape, fullscreen, faces, FPS, tap card** | U | TODO | Device + FPS: `____` |
 | W.11 | P1 | Remove `NEON_API_KEY` secret if unused, or keep for Phase 2+ | U | TODO | |

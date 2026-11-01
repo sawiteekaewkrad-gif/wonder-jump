@@ -29,8 +29,8 @@ Only the owner can mark device or multiplayer tests PASS.
 | QA-W-04 | Showcase at 915×412 @2x (phone landscape) | L4 | 6 characters with visible faces, items, enemies, portal, ground fills the lower screen, no console errors | **PASS** 2026-11-01 (headless, SwiftShader) |
 | QA-W-05 | Tap Miyu | L4 | Miyu hops; card "Miyu · Little Witch · Crystal Staff" + tagline | **PASS** 2026-11-01 |
 | QA-W-06 | Portrait viewport | L4 | Rotate overlay (TH + EN) | **PASS** 2026-11-01 |
-| QA-W-07 | `ci.yml` on GitHub | L3 | Green | NOT RUN |
-| QA-W-08 | `android-apk.yml`: artifact + Latest APK release | L5 | `WonderJump-latest.apk` in release `apk-latest` | NOT RUN |
+| QA-W-07 | `ci.yml` on GitHub | L3 | Green | **PASS** 2026-11-01 (run 41289889671, 23 s) |
+| QA-W-08 | `android-apk.yml`: artifact + Latest APK release | L5 | `WonderJump-latest.apk` in release `apk-latest` | **PASS** 2026-11-01: build 0.1.1, 5.0 MB, 2 m 36 s (run 41289889541) |
 | QA-W-D01 | Install Latest APK on D1 | L6 | Installs, opens in **landscape fullscreen**; rotating 180° flips; portrait stays landscape | NOT RUN |
 | QA-W-D02 | Visual check on D1 | L6 | Faces visible, colours match ArtDirection, no black screen | NOT RUN |
 | QA-W-D03 | Performance on D1 | L6 | HUD FPS ≥ 55 (note the draw count) | NOT RUN |
