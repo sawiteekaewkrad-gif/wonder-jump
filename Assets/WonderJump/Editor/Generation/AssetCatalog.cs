@@ -59,11 +59,14 @@ namespace WonderJump.EditorTools.Generation
         public int ItemValue;
         /// <summary>Adds a kinematic Rigidbody (moving platforms, enemies, bosses).</summary>
         public bool Kinematic;
+        /// <summary>Local Euler rotation of the visual mesh (e.g. coins stand upright to face the side camera).</summary>
+        public Vector3 VisualRotation;
 
         public string Fingerprint()
         {
             return "simple|" + Id + "|" + Category + "|" + World + "|" + Shape + "|" + AssetCatalog.F(Size) + "|" +
-                   Material + "|" + Collider + "|" + Layer + "|" + Pivot + "|" + ItemType + "|" + ItemValue + "|" + Kinematic;
+                   Material + "|" + Collider + "|" + Layer + "|" + Pivot + "|" + ItemType + "|" + ItemValue + "|" + Kinematic + "|" +
+                   AssetCatalog.F(VisualRotation);
         }
     }
 
@@ -189,7 +192,8 @@ namespace WonderJump.EditorTools.Generation
             Prop(list, "PortalFrame", WorldId.Shared, ShapeKind.Torus, new Vector3(1.5f, 1.8f, .3f), "M_Gold", ColliderRole.Trigger, WonderJumpLayers.Interactable);
 
             // --- Collectibles (shared). Values are placeholders until the GDD sets the economy.
-            Item(list, "Coin", ShapeKind.Cylinder, new Vector3(.45f, .08f, .45f), "M_Gold", CollectibleType.Coin, 1);
+            // v1 coin lay flat (edge-on to the side camera); stand it upright so its face points at the camera.
+            Item(list, "Coin", ShapeKind.Cylinder, new Vector3(.45f, .08f, .45f), "M_Gold", CollectibleType.Coin, 1).VisualRotation = new Vector3(90f, 0f, 0f);
             Item(list, "Star", ShapeKind.Sphere, new Vector3(.45f, .45f, .20f), "M_Gold", CollectibleType.Star, 1);
             Item(list, "Heart", ShapeKind.Sphere, new Vector3(.45f, .45f, .25f), "M_Pink", CollectibleType.Heart, 1);
             Item(list, "CrystalGem", ShapeKind.Octahedron, new Vector3(.45f, .65f, .35f), "M_Crystal", CollectibleType.CrystalGem, 10);
@@ -239,15 +243,17 @@ namespace WonderJump.EditorTools.Generation
             });
         }
 
-        private static void Item(List<SimpleAssetDef> list, string id, ShapeKind shape, Vector3 size, string material,
+        private static SimpleAssetDef Item(List<SimpleAssetDef> list, string id, ShapeKind shape, Vector3 size, string material,
             CollectibleType type, int value)
         {
-            list.Add(new SimpleAssetDef
+            var def = new SimpleAssetDef
             {
                 Id = id, Category = AssetCategory.Item, World = WorldId.Shared, Shape = shape, Size = size,
                 Material = material, Collider = ColliderRole.Trigger, Layer = WonderJumpLayers.Collectible,
                 Pivot = PivotMode.Center, ItemType = type, ItemValue = value
-            });
+            };
+            list.Add(def);
+            return def;
         }
 
         // ------------------------------------------------------------------ paths

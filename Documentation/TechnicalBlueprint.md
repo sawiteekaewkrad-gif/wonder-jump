@@ -41,13 +41,15 @@
 | D-06 | Each level is its own scene, loaded additively into `Gameplay`; co-op uses NGO's scene manager | Adopted | Clean memory per level; both peers load the same scene |
 | D-07 | Data = ScriptableObjects; IDs = enums with fixed numeric values (`CharacterId`, `WorldId`), levels = `LevelId` "W{w}_L{l}" | **Adopted, implemented** | Safe for save files and network messages |
 | D-08 | Local JSON save, `schemaVersion`, atomic write; per-player in co-op | Adopted (schema written) | Cloud save post-MVP |
+| D-09 | Editor pinned to **Unity 6000.3.27f1 (6.3 LTS)** | **Adopted 2026-11-01** | Patched for CVE-2025-59489 (Android code-execution risk in apps built with older editors). A matching GameCI image exists. 6000.0.58f2 GameCI images had a known "No sdkmanager found" Android bug |
+| D-10 | APK builds via **GitHub Actions + GameCI** (`android.yml`): license check → Unity tests → `WonderJumpBuild.BuildAndroidCI` | **Adopted 2026-11-01** | Real Unity compile + tests + APK with no local machine. Public repo, so standard runner minutes are free. Cost: owner must add Unity Personal license secrets; first run is slow |
 
 ## 2. Code layout (implemented in Phase 0)
 | Assembly | Folder | Depends on | Contents |
 |---|---|---|---|
 | `WonderJump.Runtime` | `Assets/WonderJump/Runtime` | UnityEngine only (**no package dependencies yet**) | Contracts + small, real components |
 | `WonderJump.Editor` | `Assets/WonderJump/Editor` | Runtime | Generator, validator, project setup |
-| `WonderJump.Tests.EditMode` | `Assets/WonderJump/Tests/EditMode` | Runtime, Editor, NUnit | 22 tests (17 pure logic + 5 generator integration) |
+| `WonderJump.Tests.EditMode` | `Assets/WonderJump/Tests/EditMode` | Runtime, Editor, NUnit | 23 tests (18 pure logic + 5 generator integration) |
 | `WonderJump.Tests.PlayMode` | `Assets/WonderJump/Tests/PlayMode` | Runtime, NUnit | 3 physics tests |
 
 Phase 1/2 will add `WonderJump.Net` (references NGO/UGS) and `WonderJump.Controls.InputSystem` (references the Input System). Runtime stays free of package references, so core gameplay always compiles.
@@ -175,7 +177,8 @@ Placeholder characters are 13–16 renderers each (~7–9k tris from default pri
 | Graphics APIs | Vulkan, OpenGLES3 |
 | Color space | Linear |
 | Min API / Target API | 26 / Auto (highest installed; confirm against Google Play's requirement at release) |
-| Package name | **OPEN (Q1)**. The tool warns while it is still `DefaultCompany` |
+| Package name | **OPEN (Q1)**. Build pipeline uses placeholder `com.wonderjump.adventureworlds.dev` (env `WJ_ANDROID_PACKAGE` overrides) |
+| Signing | Debug key for test APKs; release keystore before any store upload |
 | Keystore | Owner-created, never committed (.gitignore blocks `*.keystore`/`*.jks`) |
 
 ## 8. Phase plan

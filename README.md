@@ -15,22 +15,42 @@ Reference/AssetPack_v1/       original asset pack (archived, not compiled)
 Tools/CompileCheck/           out-of-Unity compile check (Mono + API stubs)
 ```
 
-## First-time setup (owner, in Unity)
-This repo holds the project's code and docs. The Unity project files (`ProjectSettings/`, `Packages/`) come from Unity's URP template.
+## Unity version (pinned)
+**Unity 6000.3.27f1 (Unity 6.3 LTS)** with Android Build Support, as pinned in `ProjectSettings/ProjectVersion.txt`.
+- This version includes the fix for the Android security issue CVE-2025-59489 (fixed from 6000.0.58f2 onward). Don't build with older editors.
+- A matching GameCI CI image exists (`unityci/editor:ubuntu-6000.3.27f1-android-3`).
+- Upgrading Unity = change `ProjectVersion.txt` in its own commit and check that a CI image exists for the new version.
 
-1. **Unity Hub:** install the newest **Unity 6 LTS** with **Android Build Support** (OpenJDK, Android SDK & NDK tools).
-2. **Create the project:** Hub → New project → **Universal 3D** template → create it in an empty folder, e.g. `WonderJump`. Close Unity.
-3. **Attach this repo** (in that folder):
-   ```bash
-   git init
-   git lfs install
-   git remote add origin https://github.com/sawiteekaewkrad-gif/wonder-jump.git
-   git fetch origin
-   git checkout -b main --track origin/main   # repo files do not overlap the template's
-   ```
-4. **Open the project** in Unity and wait for compilation. **Check the Console for 0 errors.**
-5. **Package Manager → Unity Registry:** install Input System, Netcode for GameObjects, Multiplayer Services, Cinemachine, Multiplayer Play Mode. (Test Framework ships with the template.) Accept the Input System restart prompt.
-6. Commit `ProjectSettings/`, `Packages/` and the new `.meta` files.
+## First-time setup (owner, local Unity)
+1. Unity Hub → Installs → install **6000.3.27f1** with **Android Build Support** (OpenJDK, Android SDK & NDK).
+2. `git clone https://github.com/sawiteekaewkrad-gif/wonder-jump.git` (then `git lfs install`).
+3. Unity Hub → **Add project from disk** → choose the cloned folder → open with 6000.3.27f1. Unity creates the missing project settings on first open.
+4. Check the Console: **0 errors**.
+5. **Wonder Jump → Setup → Ensure URP Pipeline** (creates and assigns a mobile URP asset if none is active).
+6. Later phases add packages (Input System, Netcode for GameObjects, Multiplayer Services, Cinemachine, Multiplayer Play Mode); Phase 0 needs only what is in `Packages/manifest.json`.
+7. Commit `ProjectSettings/`, `Packages/packages-lock.json` and the new `.meta` files.
+
+## Building the APK on GitHub (no local Unity needed)
+Workflow: `.github/workflows/android.yml` (GameCI). It runs on every push to `main` that touches the project, or manually (Actions → *Unity tests + Android APK* → Run workflow). Each run:
+1. Checks the license secrets.
+2. Compiles in real Unity and runs EditMode + PlayMode tests.
+3. Builds the APK: URP → generate → validate → showcase scene → APK.
+
+Download the APK from the run page → **Artifacts → WonderJump-Android-APK**, then install it on the phone (allow "install unknown apps").
+
+**One-time setup: Unity Personal license secrets** (you must do this yourself; never paste passwords in chat):
+1. Install Unity Hub, sign in, then go to **Preferences → Licenses → Add → Get a free personal license**. Do the "Add" step even if a license is already shown.
+2. Find the license file `Unity_lic.ulf` (hidden folders):
+   - Windows: `C:\ProgramData\Unity\Unity_lic.ulf`
+   - macOS: `/Library/Application Support/Unity/Unity_lic.ulf`
+   - Linux: `~/.local/share/unity3d/Unity/Unity_lic.ulf`
+3. GitHub repo → **Settings → Secrets and variables → Actions → New repository secret**, three times:
+   - `UNITY_LICENSE` = the full contents of `Unity_lic.ulf`
+   - `UNITY_EMAIL` = your Unity account email
+   - `UNITY_PASSWORD` = your Unity account password
+4. Actions → **Unity tests + Android APK** → **Run workflow**. The first run takes about 30–60 min (downloads the Unity image); later runs are faster thanks to the Library cache.
+
+The APK uses Unity's debug signing and the placeholder package `com.wonderjump.adventureworlds.dev` until Q1 is answered (or set the env var `WJ_ANDROID_PACKAGE`). It is for device testing, not for Google Play.
 
 ## Generating the placeholder assets
 Menu **Wonder Jump**:
@@ -44,6 +64,9 @@ Menu **Wonder Jump**:
 | `Advanced/Force Regenerate All Generated Assets` | Rebuilds everything in the generated folder, including hand-edited files (asks first). Never touches Content |
 | `Setup/Apply Android Player Settings` | Landscape, IL2CPP, ARM64, Vulkan+GLES3, Linear, min API 26 |
 | `Setup/Create Bootstrap Scene` | Diagnostics scene (FPS/version overlay), set as first build scene |
+| `Setup/Ensure URP Pipeline` | Creates and assigns a mobile URP asset if none is active (never replaces an existing one) |
+| `Build/Rebuild Phase 0 Showcase Scene` | All characters, items and enemies on platforms, for checking assets on a device |
+| `Build/Build Android APK` | Full pipeline locally → `Builds/Android/WonderJump.apk` (the same code CI runs) |
 
 **Regeneration is safe.** Each asset is tracked in `_GeneratorManifest.json`:
 - Unchanged assets are skipped (no churn).

@@ -73,6 +73,12 @@ namespace WonderJump.Tests.EditMode
         }
 
         [Test]
+        public void Coin_StandsUpright_ToFaceSideCamera()
+        {
+            Assert.AreEqual(90f, Get("Coin").VisualRotation.x, 1e-4f);
+        }
+
+        [Test]
         public void Materials_AreUnique_NoSleeveDuplicates()
         {
             List<string> names = AssetCatalog.AllMaterialNames();

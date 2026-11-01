@@ -43,6 +43,7 @@ namespace UnityEditor
         public static bool DisplayDialog(string title, string message, string ok) { return true; }
         public static bool DisplayDialog(string title, string message, string ok, string cancel) { return true; }
         public static void SetDirty(Obj o) { }
+        public static void RevealInFinder(string path) { }
     }
 
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = true)]
@@ -86,16 +87,39 @@ namespace UnityEditor
         public static void SetUseDefaultGraphicsAPIs(BuildTarget t, bool b) { }
         public static void SetGraphicsAPIs(BuildTarget t, GraphicsDeviceType[] apis) { }
         public static string GetApplicationIdentifier(Build.NamedBuildTarget t) { return "com.DefaultCompany.Stub"; }
+        public static void SetApplicationIdentifier(Build.NamedBuildTarget t, string id) { }
+        public static string bundleVersion { get; set; }
 
         public static class Android
         {
             public static AndroidArchitecture targetArchitectures { get; set; }
             public static AndroidSdkVersions minSdkVersion { get; set; }
             public static AndroidSdkVersions targetSdkVersion { get; set; }
+            public static int bundleVersionCode { get; set; }
         }
     }
 
-    public static class EditorUserBuildSettings { public static BuildTarget activeBuildTarget { get { return BuildTarget.StandaloneWindows64; } } }
+    public enum BuildTargetGroup { Standalone = 1, Android = 7 }
+    public static class EditorUserBuildSettings
+    {
+        public static BuildTarget activeBuildTarget { get { return BuildTarget.StandaloneWindows64; } }
+        public static bool buildAppBundle { get; set; }
+        public static bool SwitchActiveBuildTarget(BuildTargetGroup g, BuildTarget t) { return true; }
+    }
+    public static class EditorApplication { public static void Exit(int code) { } }
+    [Flags] public enum BuildOptions { None = 0, Development = 1 }
+    public struct BuildPlayerOptions
+    {
+        public string[] scenes { get; set; }
+        public string locationPathName { get; set; }
+        public BuildTarget target { get; set; }
+        public BuildTargetGroup targetGroup { get; set; }
+        public BuildOptions options { get; set; }
+    }
+    public static class BuildPipeline
+    {
+        public static Build.Reporting.BuildReport BuildPlayer(BuildPlayerOptions o) { return new Build.Reporting.BuildReport(); }
+    }
 
     public class EditorBuildSettingsScene
     {
@@ -122,4 +146,17 @@ namespace UnityEditor.SceneManagement
         public static Scene NewScene(NewSceneSetup s, NewSceneMode m) { return new Scene(); }
         public static bool SaveScene(Scene s, string path) { return true; }
     }
+}
+
+namespace UnityEditor.Build.Reporting
+{
+    public enum BuildResult { Unknown = 0, Succeeded = 1, Failed = 2, Cancelled = 3 }
+    public struct BuildSummary
+    {
+        public BuildResult result { get { return BuildResult.Succeeded; } }
+        public ulong totalSize { get { return 0; } }
+        public int totalErrors { get { return 0; } }
+        public TimeSpan totalTime { get { return TimeSpan.Zero; } }
+    }
+    public sealed class BuildReport : UnityEngine.Object { public BuildSummary summary { get { return new BuildSummary(); } } }
 }

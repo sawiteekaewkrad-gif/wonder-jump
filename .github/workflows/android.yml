@@ -1,0 +1,120 @@
+name: Unity tests + Android APK
+
+# Real Unity 6 (GameCI Docker images) on GitHub-hosted runners:
+#   1. checks the Unity license secrets exist (skips the rest with a warning if not)
+#   2. compiles the project and runs EditMode + PlayMode tests
+#   3. runs WonderJumpBuild.BuildAndroidCI: URP -> generate -> validate -> showcase scene -> APK
+# The APK is attached to the run as the artifact "WonderJump-Android-APK".
+# Editor version comes from ProjectSettings/ProjectVersion.txt (unityVersion: auto).
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'Assets/**'
+      - 'Packages/**'
+      - 'ProjectSettings/**'
+      - '.github/workflows/android.yml'
+
+concurrency:
+  group: android-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  checks: write
+
+env:
+  UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+  UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+  UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+
+jobs:
+  check-secrets:
+    runs-on: ubuntu-latest
+    outputs:
+      ok: ${{ steps.check.outputs.ok }}
+    steps:
+      - name: Unity license secrets present?
+        id: check
+        run: |
+          missing=""
+          [ -z "$UNITY_LICENSE" ] && missing="$missing UNITY_LICENSE"
+          [ -z "$UNITY_EMAIL" ] && missing="$missing UNITY_EMAIL"
+          [ -z "$UNITY_PASSWORD" ] && missing="$missing UNITY_PASSWORD"
+          if [ -n "$missing" ]; then
+            echo "::warning title=Unity license secrets missing - tests and APK build skipped::Add$missing in GitHub > Settings > Secrets and variables > Actions (see README, 'Building the APK on GitHub')."
+            echo "ok=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "All Unity license secrets are set."
+            echo "ok=true" >> "$GITHUB_OUTPUT"
+          fi
+
+  tests:
+    needs: check-secrets
+    if: ${{ needs.check-secrets.outputs.ok == 'true' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          lfs: true
+      - uses: actions/cache@v4
+        with:
+          path: Library
+          key: Library-Tests-${{ hashFiles('Packages/**', 'ProjectSettings/**') }}-${{ hashFiles('Assets/**') }}
+          restore-keys: |
+            Library-Tests-${{ hashFiles('Packages/**', 'ProjectSettings/**') }}-
+            Library-Tests-
+      - name: Run EditMode + PlayMode tests
+        uses: game-ci/unity-test-runner@v4
+        with:
+          unityVersion: auto
+          testMode: all
+          artifactsPath: test-results
+          githubToken: ${{ secrets.GITHUB_TOKEN }}
+          checkName: Unity test results
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: test-results
+          path: test-results
+          retention-days: 14
+
+  android:
+    needs: [check-secrets, tests]
+    # Build the APK even if a test fails, so a device check is still possible; the failed test stays visible.
+    if: ${{ !cancelled() && needs.check-secrets.outputs.ok == 'true' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          lfs: true
+      - name: Free disk space (Unity Android image is large)
+        uses: jlumbroso/free-disk-space@v1.3.1
+        with:
+          tool-cache: false
+      - uses: actions/cache@v4
+        with:
+          path: Library
+          key: Library-Android-${{ hashFiles('Packages/**', 'ProjectSettings/**') }}-${{ hashFiles('Assets/**') }}
+          restore-keys: |
+            Library-Android-${{ hashFiles('Packages/**', 'ProjectSettings/**') }}-
+            Library-Android-
+      - name: Build APK
+        uses: game-ci/unity-builder@v4
+        with:
+          targetPlatform: Android
+          unityVersion: auto
+          buildName: WonderJump
+          buildMethod: WonderJump.EditorTools.Build.WonderJumpBuild.BuildAndroidCI
+          androidExportType: androidPackage
+          versioning: Semantic
+      - uses: actions/upload-artifact@v4
+        with:
+          name: WonderJump-Android-APK
+          path: build/Android
+          retention-days: 14

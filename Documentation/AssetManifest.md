@@ -21,6 +21,7 @@ Assets/WonderJumpGenerated/
   _GeneratorManifest.json
   Materials/            M_*.mat, <Character>_Outfit.mat, <Character>_Hair.mat
   Meshes/               WJ_Cone.asset, WJ_Torus.asset, WJ_Octahedron.asset
+  Scenes/               Phase0_Showcase.unity (rebuilt by the build pipeline)
   Prefabs/
     Characters/         Leon Elin Miyu Koko Riku Flora
     Items/              Coin Star Heart CrystalGem Key PowerUp
@@ -78,7 +79,7 @@ Measured on the builder (stub run): character capsule height 2.062, radius 0.322
 ## Collectibles (values are placeholders until the GDD economy)
 | Item | Type | Value | Shape |
 |---|---|---|---|
-| Coin | Coin | 1 | flat cylinder |
+| Coin | Coin | 1 | flat cylinder, **stood upright (X 90°) to face the side camera** (v1 lay flat, edge-on) |
 | Star | Star | 1 | flat sphere |
 | Heart | Heart | 1 | flat sphere |
 | CrystalGem | CrystalGem | 10 | **WJ_Octahedron** |

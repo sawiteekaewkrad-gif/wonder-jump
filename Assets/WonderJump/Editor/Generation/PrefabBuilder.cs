@@ -38,7 +38,7 @@ namespace WonderJump.EditorTools.Generation
     public static class PrefabBuilder
     {
         /// <summary>Bump whenever build logic changes, so existing generated prefabs get rebuilt.</summary>
-        public const int BuildVersion = 2;
+        public const int BuildVersion = 3;
 
         public const string VisualRootName = "VisualRoot";
         public const string HitboxName = "Hitbox";
@@ -163,7 +163,8 @@ namespace WonderJump.EditorTools.Generation
             var visual = new GameObject(VisualRootName);
             visual.transform.SetParent(root.transform, false);
             bool shadows = def.Category != AssetCategory.Item;
-            Part(def.Shape, "Mesh", visual.transform, Vector3.zero, def.Size, ctx.Mat(def.Material), ctx, shadows);
+            GameObject mesh = Part(def.Shape, "Mesh", visual.transform, Vector3.zero, def.Size, ctx.Mat(def.Material), ctx, shadows);
+            mesh.transform.localRotation = Quaternion.Euler(def.VisualRotation);
 
             Bounds b = GeometryUtil.MeshBounds(root.transform, null);
             float offset;

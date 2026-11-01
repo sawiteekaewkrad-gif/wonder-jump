@@ -99,6 +99,14 @@ What the stub pass does **not** prove: that Unity 6's API matches the signatures
 4. To change an asset's definition, edit `AssetCatalog.cs` and run Generate (it rebuilds in place). To discard hand edits in generated files, use **Advanced → Force Regenerate**.
 5. Commit `Assets/WonderJumpGenerated/**` including `_GeneratorManifest.json`, so every machine shares the same GUIDs and hashes.
 
+## 7b. Addendum 2026-11-01: APK build pipeline
+- **Unity pinned to 6000.3.27f1 (6.3 LTS)**: patched for CVE-2025-59489 and has a GameCI Android image.
+- **CI** (`.github/workflows/android.yml`): license check → Unity compile + EditMode/PlayMode tests → `WonderJumpBuild.BuildAndroidCI` (Ensure URP → generate → validate → showcase scene → Android settings → APK artifact).
+- New editor code (`Editor/Build`, own asmdef referencing URP) is **stub-compiled only**. The first CI run is its first real Unity compile.
+- Coin now stands upright (v1 lay flat and showed only its edge to the side camera). Stub-verified bounds 0.45 × 0.45 × 0.16.
+- Stub results now: 18/18 pure tests pass; builder smoke 596 checks PASS.
+- **Blocker:** the owner must add the Unity Personal license secrets (README). Claude cannot and should not handle the password.
+
 ## 8. Next recommended phase (after approval): Phase 1, Movement & Controls
 Scope: Input actions; **Crystal Virtual Joystick** (purple/gold, floating/fixed, dead-zone, size setting); jump/action buttons; `KinematicMotor` implementing `IPlayerMotor` (run, accel/decel, variable jump, coyote, buffer, slopes, moving platforms) with `IGroundProbe`; layer collision matrix; follow camera; graybox test level from generated platforms; EditMode tests for the motor using a fake probe; device test at 60 FPS.
 Not in Phase 1: netcode, enemies, levels, art.

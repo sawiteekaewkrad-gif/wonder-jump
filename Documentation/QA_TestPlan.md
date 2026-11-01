@@ -25,7 +25,7 @@ Status values: `NOT RUN` · `PASS` · `FAIL` · `BLOCKED`. Record who ran each t
 | ID | Test | Level | Expected | Status |
 |---|---|---|---|---|
 | QA-P0-A01 | EditMode `ProceduralMeshesTests` (4) | L5 | All pass | NOT RUN (L3 stub run: 4/4 pass) |
-| QA-P0-A02 | EditMode `AssetCatalogTests` (7) | L5 | All pass | NOT RUN (L3 stub run: 7/7 pass) |
+| QA-P0-A02 | EditMode `AssetCatalogTests` (8) | L5 | All pass | NOT RUN (L3 stub run: 8/8 pass) |
 | QA-P0-A03 | EditMode `RuntimeContractTests` (6) | L5 | All pass | NOT RUN (L3 stub run: 6/6 pass) |
 | QA-P0-A04 | EditMode `GeneratorIntegrationTests` (5): first run + validator, repeatable second run, hand-edit skip/force, material repair, variants untouched | L5 | All pass. Ignored if URP is missing | NOT RUN (cannot run outside Unity) |
 | QA-P0-A05 | PlayMode `CollectiblePickupTests` (3): collect once, two players same frame, client doesn't resolve | L5 | All pass | NOT RUN (cannot run outside Unity) |
@@ -51,10 +51,17 @@ Status values: `NOT RUN` · `PASS` · `FAIL` · `BLOCKED`. Record who ran each t
 | QA-P0-16 Play Mode readiness | Setup/Create Bootstrap Scene → Play | Enters Play Mode with no errors; overlay shows FPS and version | NOT RUN |
 | QA-P0-17 Android settings | Setup/Apply Android Player Settings; inspect Player Settings | Landscape L+R only, IL2CPP, ARM64, Vulkan+GLES3, Linear, min API 26; warning about the package name until Q1 is answered | NOT RUN |
 
-### 3.3 Device
+### 3.3 CI (GitHub Actions, real Unity)
+| ID | Check | Expected | Status |
+|---|---|---|---|
+| QA-P0-C01 | Job `check-secrets` | Passes once the 3 secrets are set | NOT RUN |
+| QA-P0-C02 | Job `tests`: compile + EditMode 23 + PlayMode 3 | All green; results in check "Unity test results" | NOT RUN |
+| QA-P0-C03 | Job `android`: log steps 1/7…7/7, `Build Succeeded` | Artifact `WonderJump-Android-APK` contains `WonderJump.apk` | NOT RUN |
+
+### 3.4 Device
 | ID | Steps | Expected | Status |
 |---|---|---|---|
-| QA-P0-D01 | Build Profiles → Android → Build And Run (Bootstrap scene) on D1 | Installs and launches; **landscape only** (rotating to portrait doesn't rotate the game); overlay ≈ 60 FPS | NOT RUN |
+| QA-P0-D01 | Install the CI APK (or Wonder Jump → Build → Build Android APK) on D1 | Installs and launches the showcase; **landscape only**; overlay ≈ 60 FPS; 6 characters, 6 items, 7 enemies visible, **no pink**, coin faces the camera | NOT RUN |
 | QA-P0-D02 | Rotate the phone 180° | Switches between Landscape Left/Right | NOT RUN |
 | QA-P0-D03 | Airplane mode on, launch | Launches normally (no network needed) | NOT RUN |
 

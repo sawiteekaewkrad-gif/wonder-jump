@@ -3,7 +3,8 @@
 Read first: `README.md`, `Documentation/TASKS.md`, `Documentation/TechnicalBlueprint.md`, `Documentation/AssetManifest.md`.
 
 ## Target (fixed)
-- Android only, landscape (Left + Right). Unity 6 LTS, URP, C#.
+- Android only, landscape (Left + Right). **Unity 6000.3.27f1 (6.3 LTS)**, pinned in `ProjectSettings/ProjectVersion.txt`, URP, C#. Never build with an editor older than the CVE-2025-59489 fix.
+- CI: `.github/workflows/android.yml` (GameCI) runs Unity tests + builds the APK. A CI run with real Unity is verification level 4/5 for the tested code.
 - 2.5D cute 3D chibi platformer. Gameplay runs on the X/Y plane; Z is locked.
 - Single player (must work with no internet) + 2-player online co-op (NGO + Unity Multiplayer Services + Relay).
 - 6 characters with fixed IDs: **Leon, Elin, Miyu, Koko, Riku, Flora** (`CharacterId` enum, values 1–6, never renumber).

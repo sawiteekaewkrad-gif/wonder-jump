@@ -23,12 +23,17 @@ Owner: **C** = Claude · **U** = owner
 | 0.19 | P0 | Tests: 22 EditMode + 3 PlayMode | C | REVIEW | 17 pure tests pass on stub; 8 need Unity |
 | 0.20 | P0 | Docs: CLAUDE, TASKS, TechnicalBlueprint, AssetManifest, QA_TestPlan, FoundationRepairReport, README | C | DONE | `Documentation/` |
 | 0.21 | P1 | Out-of-Unity compile check (`Tools/CompileCheck`) | C | DONE | `run.sh` passes |
+| 0.22 | P0 | Pin Unity 6000.3.27f1 + minimal `Packages/manifest.json` | C | REVIEW | D-09 |
+| 0.23 | P0 | Build pipeline: Ensure URP, showcase scene, `WonderJumpBuild` (menu + CI entry) | C | REVIEW | stub-compiled |
+| 0.24 | P0 | GitHub Actions workflow: Unity tests + Android APK artifact | C | REVIEW | D-10 |
+| 0.25 | P1 | Coin stands upright (faces side camera) | C | REVIEW | BuildVersion 3 |
 
 ### Owner gate (Phase 0 is DONE only when all of these pass)
 | ID | Pri | Task | Own | Status | Record |
 |---|---|---|---|---|---|
-| 0.30 | P0 | Install newest Unity 6 LTS + Android Build Support | U | TODO | Version: `______` |
-| 0.31 | P0 | Create Universal 3D project, attach repo (README), install packages | U | TODO | Package versions: `______` |
+| 0.29 | P0 | Add GitHub secrets UNITY_LICENSE / UNITY_EMAIL / UNITY_PASSWORD (README) → Claude triggers and monitors CI | U | TODO | |
+| 0.30 | P0 | Install Unity 6000.3.27f1 + Android Build Support (for local work) | U | TODO | |
+| 0.31 | P0 | Clone repo, open with Unity Hub (README), Ensure URP Pipeline | U | TODO | |
 | 0.32 | P0 | QA-P0-01 compile: 0 errors (paste any errors to Claude) | U | TODO | |
 | 0.33 | P0 | QA-P0-02…17 manual editor checks | U | TODO | |
 | 0.34 | P0 | Test Runner: EditMode 22 + PlayMode 3 green | U | TODO | |
