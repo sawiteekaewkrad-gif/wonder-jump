@@ -1,0 +1,55 @@
+# Unity generated
+/[Ll]ibrary/
+/[Tt]emp/
+/[Oo]bj/
+/[Bb]uild/
+/[Bb]uilds/
+/[Ll]ogs/
+/[Uu]ser[Ss]ettings/
+/[Mm]emoryCaptures/
+/[Rr]ecordings/
+
+# Asset Store tools / crash reports
+/[Aa]ssets/AssetStoreTools*
+sysinfo.txt
+crashlytics-build.properties
+
+# IDE
+.vs/
+.vscode/
+.idea/
+*.csproj
+*.unityproj
+*.sln
+*.suo
+*.user
+*.userprefs
+*.pidb
+*.booproj
+*.svd
+*.pdb
+*.mdb
+*.opendb
+*.VC.db
+
+# Builds
+*.apk
+*.aab
+*.unitypackage
+*.app
+
+# Android signing — NEVER commit keystores
+*.keystore
+*.jks
+/[Aa]ssets/Plugins/Android/keystore*
+
+# Generator test leftovers (tests clean up, but just in case)
+/[Aa]ssets/__WJTest_*
+/[Aa]ssets/__WJTest_*.meta
+
+# Out-of-Unity compile check output
+/Tools/CompileCheck/bin/
+
+# OS
+.DS_Store
+Thumbs.db

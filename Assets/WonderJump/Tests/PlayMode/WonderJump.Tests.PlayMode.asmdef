@@ -1,0 +1,21 @@
+{
+    "name": "WonderJump.Tests.PlayMode",
+    "rootNamespace": "WonderJump.Tests",
+    "references": [
+        "UnityEngine.TestRunner",
+        "WonderJump.Runtime"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": true,
+    "precompiledReferences": [
+        "nunit.framework.dll"
+    ],
+    "autoReferenced": false,
+    "defineConstraints": [
+        "UNITY_INCLUDE_TESTS"
+    ],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

@@ -1,0 +1,18 @@
+{
+    "name": "WonderJump.Editor",
+    "rootNamespace": "WonderJump.EditorTools",
+    "references": [
+        "WonderJump.Runtime"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
