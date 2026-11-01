@@ -203,3 +203,22 @@ html, body {
   font-size: 34px;
   background: radial-gradient(circle at 35% 30%, #c79bff, #5a24b8 70%);
 }
+
+/* Logo cut from the owner's key art (menu only) */
+.logo {
+  position: fixed;
+  top: max(4px, env(safe-area-inset-top));
+  left: 50%;
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+.logo img { height: min(26vh, 120px); display: block; filter: drop-shadow(0 3px 4px rgba(40, 20, 80, 0.35)); }
+.logo.hidden { display: none; }
+
+/* Character card portrait (concept art) */
+.card .portrait {
+  float: left;
+  height: 92px;
+  margin: -26px 12px 0 -4px;
+  filter: drop-shadow(0 2px 3px rgba(40, 20, 80, 0.35));
+}

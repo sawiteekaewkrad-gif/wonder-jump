@@ -53,6 +53,17 @@ Only the owner can mark device or multiplayer tests PASS.
 | QA-1-D03 | Device: two thumbs at once (joystick + jump) | L6 | Both register | NOT RUN |
 | QA-1-D04 | Device: FPS in the level | L6 | ≥ 55 | NOT RUN |
 
+## 4a. Art insert — concept-art characters (D-14)
+| ID | Check | Level | Expected | Status |
+|---|---|---|---|---|
+| QA-A-01 | Art files: 6 WebP, 512 px tall, aspect matches `CHARACTER_ART`, each < 150 KB; logo < 150 KB | L3 | Pass | **PASS** 2026-11-01 |
+| QA-A-02 | Sprite chibi: feet at y = 0, catalog height, 1 mesh, silhouette depth material, hitbox unchanged | L3 | Pass | **PASS** 2026-11-01 |
+| QA-A-03 | Mirror rule + `SpriteAnimator` returns to rest after 3000 frames of mixed states | L3 | Pass | **PASS** 2026-11-01 |
+| QA-A-04 | Headless menu 915×412: logo, 6 concept-art characters, tap Koko → card with portrait | L4 | Visible, no console errors | **PASS** 2026-11-01 (62 draws vs 195) |
+| QA-A-05 | Headless level: Koko run right / turn left (mirror), Miyu attack (spin + arc), double jump (cartwheel) | L4 | Correct facing; poses visible | **PASS** 2026-11-01 (first run showed the art drawn facing right → `artFacing` fixed to +1) |
+| QA-A-06 | `?chibi=primitive` fallback | L4 | Primitive chibis, 195 draws | **PASS** 2026-11-01 |
+| QA-A-D01 | Device: characters look like the concept art, readable size, turning/flip OK, FPS | L6 | Owner judgement | NOT RUN |
+
 ## 5. Later phases (outline)
 | Phase | Themes |
 |---|---|

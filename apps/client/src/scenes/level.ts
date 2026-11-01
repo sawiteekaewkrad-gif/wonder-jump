@@ -5,8 +5,8 @@ import {
   type CharacterKey, type CollectibleState, type LevelDef, type MotorEvent, type PlayerSim,
 } from '@wonderjump/shared';
 import { buildAsset } from '../render/assets.js';
-import { buildChibi } from '../render/chibi.js';
-import { PlayerAnimator } from '../render/playerAnimator.js';
+import { buildCharacter, type CharacterVisualMode } from '../render/character.js';
+import { animatorFor } from '../render/playerAnimator.js';
 import { toonMaterial } from '../render/primitives.js';
 import type { Controls } from '../input/controls.js';
 
@@ -57,7 +57,9 @@ function buildBlock(x: number, y: number, w: number, h: number, style: string): 
   return g;
 }
 
-export function createLevelScene(level: LevelDef, characterKey: CharacterKey, controls: Controls): LevelScene {
+export function createLevelScene(
+  level: LevelDef, characterKey: CharacterKey, controls: Controls, visualMode: CharacterVisualMode = 'art',
+): LevelScene {
   const scene = new THREE.Scene();
   scene.background = new THREE.Color(0x8cc8ff);
   scene.fog = new THREE.Fog(0x8cc8ff, 30, 70);
@@ -114,9 +116,9 @@ export function createLevelScene(level: LevelDef, characterKey: CharacterKey, co
   scene.add(portal);
 
   // --- player
-  const chibi = buildChibi(getCharacter(characterKey));
+  const chibi = buildCharacter(getCharacter(characterKey), visualMode);
   scene.add(chibi.root);
-  const animator = new PlayerAnimator(chibi);
+  const animator = animatorFor(chibi);
   const player = createPlayer(level.spawn.x, level.spawn.y);
   const prev = { x: player.x, y: player.y };
 

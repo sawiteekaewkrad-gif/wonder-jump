@@ -38,13 +38,21 @@ Generator repair, contracts, tests and the GameCI pipeline were delivered. Unity
 | 1.09 | P0 | **Device test: joystick feel, jump/double jump, moving platform, 60+ FPS** | U | TODO | |
 | 1.10 | P1 | Owner approves Phase 1 → Phase 2 (co-op server) | U | TODO | |
 
+### Art insert (owner request 2026-11-01, inside Phase 1 review)
+| ID | Pri | Task | Own | Status | Evidence |
+|---|---|---|---|---|---|
+| A.01 | P1 | Cut the 6 characters + logo from the owner's concept art (background removal, 512 px WebP) | C | DONE | 6 × 40–48 KB + logo 48 KB |
+| A.02 | P1 | Paper cut-out character visual (`spriteChibi.ts`, D-14) + `SpriteAnimator` for all states; primitive fallback `?chibi=primitive` | C | REVIEW | 5 new client tests + 1 shared test; headless screenshots |
+| A.03 | P1 | Menu logo + portrait on the character card | C | REVIEW | Screenshot |
+| A.04 | P1 | Owner checks the characters on the phone (look, size, turning, flip) | U | TODO | |
+
 Bugs found and fixed in Phase 1 verification: animator height drift (the visual floated higher every frame); a focused Play button restarted the level on Space and leaked input listeners; pits looked like grass; camera lost the player on double jumps.
 
 ## Phase 2 — Co-op Server (authoritative)
 2.01 `apps/server` (Fastify + Socket.IO), rooms with join code (max 2) · 2.02 30 Hz authoritative tick running the shared motor · 2.03 Client prediction + reconciliation, partner interpolation · 2.04 Lobby UI + Render wake ping · 2.05 Disconnect handling · 2.06 Per-phone camera + partner indicator + catch-up (D-05) · 2.07 Deploy to Render (free), CI · 2.08 Test 2 phones on different networks (U)
 
 ## Phase 3 — Characters
-3.01 Character select (offline + room-synced) · 3.02 Signature attacks per character (Q5) · 3.03 Portraits from concept art (cleaned)
+3.01 Character select (offline + room-synced) · 3.02 Signature attacks per character (Q5) · 3.03 Portraits from concept art (cleaned) — *first pass done in A.01/A.03*
 
 ## Phase 4 — Level framework
 4.01 Hearts/damage/i-frames/lives · 4.02 Co-op revive (Q4) · 4.03 Collectibles via server `tryCollect` · 4.04 Hazards, checkpoints, goal portal, level end (Q7) · 4.05 HUD (hearts, coins, pause) · 4.06 W1_L1

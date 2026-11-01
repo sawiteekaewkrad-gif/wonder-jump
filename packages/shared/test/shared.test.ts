@@ -116,3 +116,18 @@ describe('save', () => {
     expect(s.levels[0]).toMatchObject({ levelId: 'W1_L2', unlocked: true, stars: 2 });
   });
 });
+
+describe('character art (D-14)', () => {
+  it('has concept art for every character, at least as tall as the hitbox', async () => {
+    const { CHARACTER_ART, PLAYER_HITBOX } = await import('../src/index.js');
+    for (const key of CHARACTER_KEYS) {
+      const art = CHARACTER_ART[key];
+      expect(art.file).toBe(`characters/${key}.webp`);
+      expect(art.aspect).toBeGreaterThan(0.3);
+      expect(art.aspect).toBeLessThan(1);
+      expect(art.height).toBeGreaterThanOrEqual(PLAYER_HITBOX.height);
+      expect(art.height).toBeLessThan(3);
+      expect([1, -1]).toContain(art.artFacing);
+    }
+  });
+});

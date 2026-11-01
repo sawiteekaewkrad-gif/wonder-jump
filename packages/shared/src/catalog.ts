@@ -87,6 +87,34 @@ export function getCharacter(key: CharacterKey): CharacterDef {
   return def;
 }
 
+/**
+ * Interim character art (D-14): the owner's concept art, background-removed, shown as a 2.5D
+ * "paper cut-out" billboard until the Phase 7 GLB models exist. Files live in
+ * `apps/client/public/characters/`. Feet are the bottom edge of each image.
+ */
+export interface CharacterArtDef {
+  /** Path relative to the client's public root. */
+  file: string;
+  /** Image width / height (trimmed PNG, 512 px tall). */
+  aspect: number;
+  /** World height of the image in metres (ears/hats make some taller; bodies match the hitbox). */
+  height: number;
+  /** Screen direction the drawing faces: +1 right, -1 left. Mirrored when the player faces the other way. */
+  artFacing: 1 | -1;
+}
+
+export const CHARACTER_ART: Readonly<Record<CharacterKey, CharacterArtDef>> = {
+  Leon: { file: 'characters/Leon.webp', aspect: 0.5762, height: 2.35, artFacing: 1 },
+  Elin: { file: 'characters/Elin.webp', aspect: 0.5488, height: 2.5, artFacing: 1 },
+  Miyu: { file: 'characters/Miyu.webp', aspect: 0.6191, height: 2.55, artFacing: 1 },
+  Koko: { file: 'characters/Koko.webp', aspect: 0.5391, height: 2.45, artFacing: 1 },
+  Riku: { file: 'characters/Riku.webp', aspect: 0.541, height: 2.35, artFacing: 1 },
+  Flora: { file: 'characters/Flora.webp', aspect: 0.6309, height: 2.4, artFacing: 1 },
+};
+
+/** UI art cut from the owner's key art. */
+export const UI_ART = { logo: 'ui/logo.webp' } as const;
+
 /** Colour slot used by a body part; resolved per character by the renderer. */
 export type PartColor = 'outfit' | 'outfitAccent' | 'hair' | 'eyes' | PaletteKey;
 

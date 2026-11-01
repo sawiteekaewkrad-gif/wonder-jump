@@ -32,6 +32,7 @@
 | D-06 | Levels are data (JSON tile/box layouts) loaded by the client and the server | Adopted | Same file drives rendering and authoritative collision |
 | D-07 | IDs: `CharacterId` 1–6, `WorldId` 1–5, `LevelId` `W{w}_L{l}` | Adopted, implemented | Stable for saves and network |
 | D-08 | Save = local JSON (Capacitor Preferences / localStorage), `schemaVersion`, sanitising loader | Adopted (schema + loader implemented) | Cloud save (Neon) is post-MVP and optional |
+| **D-14** | **Interim character visuals = owner's concept art as 2.5D paper cut-outs** (textured plane + procedural animation); primitive chibi kept as `?chibi=primitive` | Adopted 2026-11-01 (owner: "put the characters in like this") | Looks like the concept art today, 1 draw per character, ~45 KB each. Cost: one pose for all states, no side view; replaced by GLB in Phase 7 behind the same `visual` contract |
 | D-13 | Persistence for accounts/leaderboards: **Neon Postgres via the server only** (never from the app) | Proposed, post-MVP | Owner already has a Neon project `wonder_jump`. DB credentials must never ship in the APK |
 | Q7 | Co-op level end: first player at the goal vs both | OPEN | Phase 4 |
 
@@ -60,7 +61,7 @@ InputFrame (joystick/keys/test) ─► Motor.step(state, input, dt, level)   [sh
 | Collectibles | `shared/collectibles.ts` | ✅ collect-once, authority-gated, tested | Network request path (P2/P4) |
 | Movement | `shared/player.ts`, `shared/motor.ts` | ✅ settings + maths; **P1: deterministic fixed-step motor (60 Hz) with AABB collision, one-way, moving-platform carry, coyote/buffer, double jump, attack** | Server reuse (P2) |
 | Save | `shared/save.ts` | ✅ schema + sanitising loader | Storage adapter (P6) |
-| Rendering | `client/render/*` | ✅ shared geometries, toon materials, chibi + asset builders | GLB loader + AnimationMixer (P7) |
+| Rendering | `client/render/*` | ✅ shared geometries, toon materials, chibi + asset builders; **D-14: `spriteChibi.ts` + `SpriteAnimator` (concept-art cut-outs)** | GLB loader + AnimationMixer (P7) |
 | Scenes | `client/scenes/showcase.ts`, `client/scenes/level.ts` | ✅ showcase = menu; **P1: level scene, interpolated rendering, keep-in-frame camera, pickups (offline authority), course clear** | Co-op scene (P2) |
 | Input | `client/input/controls.ts` | **P1: Crystal Joystick (floating, dead-zone), Jump/Attack buttons, keyboard → `InputFrame`** | Settings UI (P6) |
 | Network | — | — | `apps/server` + client netcode (P2) |
@@ -87,7 +88,7 @@ InputFrame (joystick/keys/test) ─► Motor.step(state, input, dt, level)   [sh
 | Metric | Target |
 |---|---|
 | Frame rate | 60 FPS mid-range (A3), never below 30 low-end |
-| Draw calls | ≤ 150 (showcase today: 195 with 6 primitive chibis × ~15 parts; final GLB = 1 draw per character) |
+| Draw calls | ≤ 150 (showcase: 62 with concept-art cut-outs, 195 with primitive chibis; final GLB = 1 draw per character) |
 | Pixel ratio | ≤ 2 |
 | Shadows | 1 directional, 1024² map; only characters/enemies cast |
 | Character GLB | ≤ 8k tris, ≤ 30 bones, 1 toon material, ≤ 1.5 MB |

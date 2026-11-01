@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import { DEFAULT_MOVEMENT, type PlayerSim } from '@wonderjump/shared';
 import type { Chibi } from './chibi.js';
 import { toonMaterial } from './primitives.js';
+import { isSpriteChibi, mirrorFor, type SpriteChibi } from './spriteChibi.js';
 
 /**
  * Placeholder procedural animation driven by the gameplay state (until the shared GLB clip set,
@@ -25,11 +26,7 @@ export class PlayerAnimator {
     this.arms = ['Arm_L', 'Arm_R'].map((n) => v.getObjectByName(n)!).filter(Boolean);
     for (const o of [...this.legs, ...this.arms]) this.basePos.set(o, o.position.clone());
 
-    const arcMat = toonMaterial(0xffd65c).clone();
-    arcMat.transparent = true;
-    arcMat.opacity = 0.85;
-    this.slash = new THREE.Mesh(new THREE.TorusGeometry(0.9, 0.08, 6, 20, Math.PI * 0.9), arcMat);
-    this.slash.visible = false;
+    this.slash = makeSlash();
     chibi.root.add(this.slash);
   }
 
@@ -114,4 +111,98 @@ export class PlayerAnimator {
     if (al) al.rotation.z = amount * 0.6;
     if (ar) ar.rotation.z = -amount * 0.6;
   }
+}
+
+/**
+ * Animation for the paper cut-out characters (D-14). A flat drawing can't swing limbs or yaw,
+ * so the same state vocabulary is expressed with screen-plane motion: a paper-turn when changing
+ * direction, run bob + waddle, jump stretch, a cartwheel double jump, landing squash and a
+ * spin-slash attack.
+ */
+export class SpriteAnimator {
+  private readonly slash: THREE.Mesh;
+  private mirror: number;
+  private phase = 0;
+  private readonly half: number;
+
+  constructor(private readonly chibi: SpriteChibi) {
+    this.mirror = mirrorFor(chibi.def.key, 1);
+    this.half = chibi.sprite.scale.y / 2;
+    this.slash = makeSlash();
+    chibi.root.add(this.slash);
+  }
+
+  update(p: PlayerSim, dt: number): void {
+    const { visual: v, flip, def } = this.chibi;
+    const t = p.stateTime;
+    // paper turn: the drawing narrows through zero and widens mirrored
+    const target = mirrorFor(def.key, p.facing);
+    this.mirror += (target - this.mirror) * Math.min(1, dt * 18);
+    v.position.set(0, 0, 0);
+    v.rotation.set(0, 0, 0);
+    v.scale.set(1, 1, 1);
+    flip.position.set(0, 0, 0);
+    flip.scale.set(this.mirror, 1, 1);
+    this.slash.visible = false;
+
+    const speed = Math.abs(p.vx) / DEFAULT_MOVEMENT.maxRunSpeed;
+    switch (p.state) {
+      case 'Idle': {
+        const s = 1 + Math.sin(performance.now() / 320) * 0.025;
+        v.scale.set(1 / Math.sqrt(s), s, 1);
+        break;
+      }
+      case 'Walk':
+      case 'Run': {
+        this.phase += dt * (6 + speed * 10);
+        v.position.y = Math.abs(Math.cos(this.phase)) * 0.09 * (0.5 + speed);
+        v.rotation.z = Math.sin(this.phase) * 0.07 * (0.4 + speed) - p.facing * speed * 0.1;
+        break;
+      }
+      case 'Jump':
+        v.scale.set(0.92, 1.1, 1);
+        break;
+      case 'DoubleJump': {
+        // cartwheel around the body centre (a flat drawing can't front-flip)
+        const k = Math.min(1, t / 0.36);
+        v.position.y = this.half + Math.sin(k * Math.PI) * 0.6;
+        flip.position.y = -this.half;
+        v.rotation.z = -p.facing * k * Math.PI * 2;
+        break;
+      }
+      case 'Fall':
+        v.scale.set(0.97, 1.04, 1);
+        break;
+      case 'Land':
+        v.scale.set(1.16, 0.84, 1);
+        break;
+      case 'Attack': {
+        const k = Math.min(1, t / 0.28);
+        flip.scale.x = this.mirror * Math.cos(k * Math.PI * 2); // paper spin
+        this.slash.visible = k < 1;
+        this.slash.position.set(p.facing * 0.35, 1.0, 0.3);
+        this.slash.rotation.set(0, 0, p.facing > 0 ? -0.6 + k * 1.2 : Math.PI + 0.6 - k * 1.2);
+        (this.slash.material as THREE.MeshToonMaterial).opacity = 0.9 * (1 - k);
+        break;
+      }
+      default:
+        break;
+    }
+  }
+}
+
+function makeSlash(): THREE.Mesh {
+  const arcMat = toonMaterial(0xffd65c).clone();
+  arcMat.transparent = true;
+  arcMat.opacity = 0.85;
+  const m = new THREE.Mesh(new THREE.TorusGeometry(0.9, 0.08, 6, 20, Math.PI * 0.9), arcMat);
+  m.visible = false;
+  return m;
+}
+
+export type CharacterAnimator = PlayerAnimator | SpriteAnimator;
+
+/** Picks the animator matching the character visual. */
+export function animatorFor(c: Chibi): CharacterAnimator {
+  return isSpriteChibi(c) ? new SpriteAnimator(c) : new PlayerAnimator(c);
 }

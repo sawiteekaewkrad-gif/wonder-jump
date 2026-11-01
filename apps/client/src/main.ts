@@ -3,6 +3,8 @@ import { TEST_MOVEMENT, getCharacter, type CharacterKey } from '@wonderjump/shar
 import { createShowcase } from './scenes/showcase.js';
 import { createLevelScene, type LevelScene } from './scenes/level.js';
 import { Controls } from './input/controls.js';
+import { visualModeFrom } from './render/character.js';
+import { CHARACTER_ART, UI_ART } from '@wonderjump/shared';
 
 declare const __APP_VERSION__: string;
 
@@ -25,13 +27,15 @@ const el = (cls: string, html = '') => {
 };
 const hud = el('hud');
 const hint = el('hint', 'แตะตัวละครเพื่อเลือก');
+const logo = el('logo', `<img src="${UI_ART.logo}" alt="Wonder Jump – Adventure Worlds"/>`);
 const card = el('card hidden');
 const menuBtn = el('top-btn hidden', '⏸ เมนู');
 const clearBox = el('clear hidden');
 el('rotate', '<div class="icon">📱↻</div><div>หมุนโทรศัพท์เป็นแนวนอน<br/>Please rotate to landscape</div>');
 
 // ---------------------------------------------------------------- modes
-const showcase = createShowcase();
+const visualMode = visualModeFrom(location.search);
+const showcase = createShowcase(visualMode);
 let level: LevelScene | null = null;
 let controls: Controls | null = null;
 let selected: CharacterKey = 'Leon';
@@ -41,7 +45,7 @@ function startLevel(key: CharacterKey): void {
   (document.activeElement as HTMLElement | null)?.blur();
   selected = key;
   controls = new Controls(document.body, { floating: true, scale: 1, deadzone: 0.15 });
-  level = createLevelScene(TEST_MOVEMENT, key, controls);
+  level = createLevelScene(TEST_MOVEMENT, key, controls, visualMode);
   level.onEvent = (e) => {
     if (e === 'clear' && level) {
       const s = level.stats;
@@ -56,6 +60,7 @@ function startLevel(key: CharacterKey): void {
   card.classList.add('hidden');
   card.inert = true;
   hint.classList.add('hidden');
+  logo.classList.add('hidden');
   menuBtn.classList.remove('hidden');
 }
 
@@ -67,6 +72,7 @@ function toMenu(): void {
   clearBox.classList.add('hidden');
   menuBtn.classList.add('hidden');
   hint.classList.remove('hidden');
+  logo.classList.remove('hidden');
   (document.activeElement as HTMLElement | null)?.blur();
 }
 
@@ -88,7 +94,8 @@ renderer.domElement.addEventListener('pointerdown', (e) => {
   const def = showcase.pick(((e.clientX - rect.left) / rect.width) * 2 - 1, -((e.clientY - rect.top) / rect.height) * 2 + 1);
   if (!def) return;
   selected = def.key;
-  card.innerHTML =
+  const portrait = visualMode === 'art' ? `<img class="portrait" src="${CHARACTER_ART[def.key].file}" alt=""/>` : '';
+  card.innerHTML = portrait +
     `<h2>${def.displayName}</h2><div class="title">${def.title} · ${def.signatureItem}</div>` +
     `<p>“${def.tagline}”</p><button data-act="play">▶ เล่นด่านทดสอบ</button>`;
   card.classList.remove('hidden');

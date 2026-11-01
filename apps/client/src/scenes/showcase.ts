@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import { ASSETS, CHARACTERS, PLAYABLE_WORLDS, getAsset, type CharacterDef } from '@wonderjump/shared';
-import { buildChibi, type Chibi } from '../render/chibi.js';
+import type { Chibi } from '../render/chibi.js';
+import { buildCharacter, type CharacterVisualMode } from '../render/character.js';
 import { buildAsset } from '../render/assets.js';
 
 /**
@@ -20,7 +21,7 @@ const VISIBLE_HALF_WIDTH = 10.5; // metres visible either side of centre
 const CAMERA_DISTANCE = 15;
 const LOOK_AT_Y = 1.7;
 
-export function createShowcase(): Showcase {
+export function createShowcase(visualMode: CharacterVisualMode = 'art'): Showcase {
   const scene = new THREE.Scene();
   scene.background = new THREE.Color(0x8cc8ff);
   scene.fog = new THREE.Fog(0x8cc8ff, 24, 46);
@@ -74,7 +75,7 @@ export function createShowcase(): Showcase {
 
   // Characters
   const chibis: Chibi[] = CHARACTERS.map((def, i) => {
-    const c = buildChibi(def);
+    const c = buildCharacter(def, visualMode);
     c.root.position.set(-6.25 + i * 2.5, 0, 0);
     scene.add(c.root);
     return c;
@@ -119,6 +120,7 @@ export function createShowcase(): Showcase {
         // idle breathing (squash & stretch) until real animations exist
         const s = 1 + Math.sin(t * 3 + i * 0.7) * 0.025;
         c.visual.scale.set(1 / Math.sqrt(s), s, 1 / Math.sqrt(s));
+        c.visual.rotation.z = Math.sin(t * 1.3 + i) * 0.03; // gentle sway (reads well on cut-outs)
         const start = hops.get(c);
         if (start !== undefined) {
           const k = (t - start) / 0.55;
