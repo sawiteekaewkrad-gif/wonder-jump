@@ -1,0 +1,27 @@
+{
+  "name": "wonder-jump",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Wonder Jump – Adventure Worlds: cute 2.5D 3D-chibi platformer for Android (TypeScript monorepo)",
+  "type": "module",
+  "workspaces": [
+    "packages/shared",
+    "apps/client",
+    "apps/mobile"
+  ],
+  "engines": {
+    "node": ">=22.0.0"
+  },
+  "scripts": {
+    "build:shared": "npm run build -w @wonderjump/shared",
+    "build": "npm run build:shared && npm run build -w @wonderjump/client",
+    "typecheck": "npm run build:shared && npm run typecheck --workspaces --if-present",
+    "test": "npm run build:shared && npm run test --workspaces --if-present",
+    "check": "npm run typecheck && npm run test && npm run build",
+    "dev": "npm run build:shared && npm run dev -w @wonderjump/client",
+    "mobile:sync": "npm run build && npm run sync -w @wonderjump/mobile"
+  },
+  "devDependencies": {
+    "typescript": "~5.8.3"
+  }
+}

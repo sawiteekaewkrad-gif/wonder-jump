@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Wonder Jump</string>
+    <string name="title_activity_main">Wonder Jump</string>
+    <string name="package_name">com.wonderjump.adventureworlds.dev</string>
+    <string name="custom_url_scheme">com.wonderjump.adventureworlds.dev</string>
+</resources>

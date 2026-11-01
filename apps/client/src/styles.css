@@ -1,0 +1,91 @@
+:root {
+  --purple: #6b2fd1;
+  --purple-deep: #3b1880;
+  --gold: #ffc23d;
+  --ink: #2a1f33;
+  --card: rgba(255, 255, 255, 0.88);
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  height: 100%;
+  overflow: hidden;
+  background: #8cc8ff;
+  color: var(--ink);
+  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Noto Sans Thai', sans-serif;
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: none;
+}
+
+#app, canvas { position: fixed; inset: 0; width: 100%; height: 100%; display: block; }
+
+.hud {
+  position: fixed;
+  top: max(10px, env(safe-area-inset-top));
+  left: max(12px, env(safe-area-inset-left));
+  padding: 8px 12px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, var(--purple), var(--purple-deep));
+  color: #fff;
+  border: 2px solid var(--gold);
+  box-shadow: 0 4px 14px rgba(59, 24, 128, 0.35);
+  font-size: 13px;
+  line-height: 1.35;
+  pointer-events: none;
+}
+.hud strong { font-size: 15px; color: var(--gold); }
+.hud .dim { opacity: 0.8; }
+
+.hint {
+  position: fixed;
+  top: max(10px, env(safe-area-inset-top));
+  right: max(12px, env(safe-area-inset-right));
+  padding: 6px 10px;
+  border-radius: 12px;
+  background: var(--card);
+  font-size: 12px;
+  pointer-events: none;
+}
+
+.card {
+  position: fixed;
+  left: 50%;
+  bottom: max(12px, env(safe-area-inset-bottom));
+  transform: translateX(-50%);
+  min-width: 260px;
+  max-width: min(520px, 90vw);
+  padding: 10px 16px;
+  border-radius: 16px;
+  background: var(--card);
+  border: 2px solid var(--gold);
+  text-align: center;
+  pointer-events: none;
+  transition: opacity 0.2s;
+}
+.card h2 { margin: 0; font-size: 18px; color: var(--purple-deep); }
+.card .title { font-size: 13px; opacity: 0.75; }
+.card p { margin: 4px 0 0; font-size: 14px; }
+.card.hidden { opacity: 0; }
+
+.rotate {
+  position: fixed;
+  inset: 0;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 12px;
+  background: linear-gradient(160deg, var(--purple), var(--purple-deep));
+  color: #fff;
+  font-size: 18px;
+  text-align: center;
+  z-index: 10;
+}
+.rotate .icon { font-size: 54px; }
+@media (orientation: portrait) {
+  .rotate { display: flex; }
+}

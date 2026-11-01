@@ -1,0 +1,84 @@
+# Builds the Android APK on every push to main (or manually from the Actions tab) and publishes it
+# to the "Latest APK" release, so it can be downloaded straight from a phone. No licence needed.
+name: Android APK
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write # needed to update the "apk-latest" release
+
+concurrency:
+  group: android-apk
+  cancel-in-progress: true
+
+jobs:
+  apk:
+    runs-on: ubuntu-24.04 # pinned: ubuntu-latest moves to 26.04 (runner-images#14748)
+    timeout-minutes: 30
+    env:
+      APP_VERSION_CODE: ${{ github.run_number }}
+      APP_VERSION_NAME: 0.1.${{ github.run_number }}
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+          cache: npm
+
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: 21
+
+      - uses: gradle/actions/setup-gradle@v5 # caches Gradle downloads between runs
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Tests (no APK from a failing build)
+        run: npm test
+
+      - name: Build web game and copy into the Android project
+        run: npm run mobile:sync
+
+      - name: Build debug APK
+        working-directory: apps/mobile/android
+        run: |
+          chmod +x gradlew
+          ./gradlew assembleDebug --no-daemon
+
+      - name: Rename APK
+        run: |
+          mkdir -p out
+          cp apps/mobile/android/app/build/outputs/apk/debug/app-debug.apk "out/WonderJump-${APP_VERSION_NAME}.apk"
+          # fixed name too → the phone link never changes: …/releases/download/apk-latest/WonderJump-latest.apk
+          cp apps/mobile/android/app/build/outputs/apk/debug/app-debug.apk out/WonderJump-latest.apk
+          ls -la out
+
+      - name: Keep APK as a build artifact (30 days)
+        uses: actions/upload-artifact@v5
+        with:
+          name: WonderJump-${{ env.APP_VERSION_NAME }}-apk
+          path: out/WonderJump-${{ env.APP_VERSION_NAME }}.apk
+          retention-days: 30
+          if-no-files-found: error
+
+      - name: Publish to "Latest APK" release (download from phone)
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          NOTES="Debug build ${APP_VERSION_NAME} from commit ${GITHUB_SHA::7}. Tap WonderJump-latest.apk below on your Android phone to install. For testing only."
+          if gh release view apk-latest >/dev/null 2>&1; then
+            gh release edit apk-latest --title "🦊 Wonder Jump — Latest APK (build ${APP_VERSION_NAME})" --notes "$NOTES" --prerelease
+            for a in $(gh release view apk-latest --json assets -q '.assets[].name'); do
+              case "$a" in WonderJump-latest.apk|"WonderJump-${APP_VERSION_NAME}.apk") ;; *) gh release delete-asset apk-latest "$a" --yes ;; esac
+            done
+            gh release upload apk-latest out/*.apk --clobber
+          else
+            gh release create apk-latest out/*.apk --title "🦊 Wonder Jump — Latest APK (build ${APP_VERSION_NAME})" --notes "$NOTES" --prerelease --target "${GITHUB_SHA}"
+          fi
+          gh release view apk-latest --json assets -q '.assets[] | "\(.name) \(.size) bytes"'

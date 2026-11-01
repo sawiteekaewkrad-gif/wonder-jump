@@ -1,0 +1,12 @@
+{
+  "appId": "com.wonderjump.adventureworlds.dev",
+  "appName": "Wonder Jump",
+  "webDir": "../client/dist",
+  "android": {
+    "allowMixedContent": false,
+    "backgroundColor": "#8cc8ff"
+  },
+  "server": {
+    "androidScheme": "https"
+  }
+}

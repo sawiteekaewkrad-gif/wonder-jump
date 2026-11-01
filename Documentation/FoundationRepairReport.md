@@ -1,4 +1,6 @@
-# Phase 0 — Foundation Repair & Technical Validation Report
+# Phase 0 — Foundation Repair & Technical Validation Report (Unity, historical)
+
+> **Superseded 2026-11-01 by decision D-11 (web stack).** The Unity code this report describes lives on branch `archive/unity-phase0`. Kept for traceability: the design findings (asset defects, collider specs, world mapping, authority model) were ported to `packages/shared`.
 
 | Item | Value |
 |---|---|

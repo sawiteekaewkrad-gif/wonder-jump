@@ -1,55 +1,26 @@
-# Unity generated
-/[Ll]ibrary/
-/[Tt]emp/
-/[Oo]bj/
-/[Bb]uild/
-/[Bb]uilds/
-/[Ll]ogs/
-/[Uu]ser[Ss]ettings/
-/[Mm]emoryCaptures/
-/[Rr]ecordings/
+node_modules/
+dist/
+coverage/
+*.tsbuildinfo
+.env
+.env.local
+*.log
+.DS_Store
 
-# Asset Store tools / crash reports
-/[Aa]ssets/AssetStoreTools*
-sysinfo.txt
-crashlytics-build.properties
-
-# IDE
-.vs/
-.vscode/
-.idea/
-*.csproj
-*.unityproj
-*.sln
-*.suo
-*.user
-*.userprefs
-*.pidb
-*.booproj
-*.svd
-*.pdb
-*.mdb
-*.opendb
-*.VC.db
-
-# Builds
+# Android build outputs (the Capacitor android/ project itself IS committed)
 *.apk
 *.aab
-*.unitypackage
-*.app
+.gradle/
+build/
+local.properties
+apps/mobile/android/app/src/main/assets/public/
+apps/mobile/android/app/src/main/assets/capacitor.config.json
+apps/mobile/android/app/src/main/assets/capacitor.plugins.json
+apps/mobile/android/capacitor-cordova-android-plugins/
 
-# Android signing — NEVER commit keystores
+# Signing — never commit keystores
 *.keystore
 *.jks
-/[Aa]ssets/Plugins/Android/keystore*
 
-# Generator test leftovers (tests clean up, but just in case)
-/[Aa]ssets/__WJTest_*
-/[Aa]ssets/__WJTest_*.meta
-
-# Out-of-Unity compile check output
-/Tools/CompileCheck/bin/
-
-# OS
-.DS_Store
-Thumbs.db
+# Local screenshots from verification runs
+/tmp-shots/
