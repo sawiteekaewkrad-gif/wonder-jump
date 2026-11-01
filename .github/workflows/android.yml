@@ -32,7 +32,7 @@ env:
 
 jobs:
   check-secrets:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04  # pinned: ubuntu-latest moves to 26.04 (runner-images#14748)
     outputs:
       ok: ${{ steps.check.outputs.ok }}
     steps:
@@ -54,7 +54,7 @@ jobs:
   tests:
     needs: check-secrets
     if: ${{ needs.check-secrets.outputs.ok == 'true' }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04  # pinned: ubuntu-latest moves to 26.04 (runner-images#14748)
     timeout-minutes: 60
     steps:
       - uses: actions/checkout@v4
@@ -86,7 +86,7 @@ jobs:
     needs: [check-secrets, tests]
     # Build the APK even if a test fails, so a device check is still possible; the failed test stays visible.
     if: ${{ !cancelled() && needs.check-secrets.outputs.ok == 'true' }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04  # pinned: ubuntu-latest moves to 26.04 (runner-images#14748)
     timeout-minutes: 120
     steps:
       - uses: actions/checkout@v4
