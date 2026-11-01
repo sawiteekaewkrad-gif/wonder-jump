@@ -9,6 +9,16 @@ name: Unity tests + Android APK
 
 on:
   workflow_dispatch:
+    inputs:
+      unity_version:
+        description: 'Override editor version for diagnostics (default: auto = ProjectVersion.txt)'
+        required: false
+        default: 'auto'
+      skip_android:
+        description: 'Skip the APK job (license/tests diagnostics only)'
+        type: boolean
+        required: false
+        default: false
   push:
     branches: [main]
     paths:
@@ -70,7 +80,7 @@ jobs:
       - name: Run EditMode + PlayMode tests
         uses: game-ci/unity-test-runner@v4
         with:
-          unityVersion: auto
+          unityVersion: ${{ inputs.unity_version || 'auto' }}
           testMode: all
           artifactsPath: test-results
           githubToken: ${{ secrets.GITHUB_TOKEN }}
@@ -85,7 +95,7 @@ jobs:
   android:
     needs: [check-secrets, tests]
     # Build the APK even if a test fails, so a device check is still possible; the failed test stays visible.
-    if: ${{ !cancelled() && needs.check-secrets.outputs.ok == 'true' }}
+    if: ${{ !cancelled() && needs.check-secrets.outputs.ok == 'true' && !inputs.skip_android }}
     runs-on: ubuntu-24.04  # pinned: ubuntu-latest moves to 26.04 (runner-images#14748)
     timeout-minutes: 120
     steps:
@@ -108,7 +118,7 @@ jobs:
         uses: game-ci/unity-builder@v4
         with:
           targetPlatform: Android
-          unityVersion: auto
+          unityVersion: ${{ inputs.unity_version || 'auto' }}
           buildName: WonderJump
           buildMethod: WonderJump.EditorTools.Build.WonderJumpBuild.BuildAndroidCI
           androidExportType: androidPackage
