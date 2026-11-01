@@ -4,3 +4,6 @@ export * from './authority.js';
 export * from './collectibles.js';
 export * from './player.js';
 export * from './save.js';
+export * from './level.js';
+export * from './motor.js';
+export * from './levels/testMovement.js';

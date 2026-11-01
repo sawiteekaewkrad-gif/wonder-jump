@@ -66,3 +66,24 @@ describe('asset builder pivots', () => {
     expect(unitGeometry('capsule').boundingBox!.getSize(new THREE.Vector3()).y).toBeCloseTo(2, 3);
   });
 });
+
+describe('player animator', () => {
+  it('never drifts the visual away from the feet over many frames (regression)', async () => {
+    const { PlayerAnimator } = await import('../src/render/playerAnimator.js');
+    const { createPlayer } = await import('@wonderjump/shared');
+    const c = buildChibi(CHARACTERS[4]!);
+    const lift = c.visual.position.y;
+    const anim = new PlayerAnimator(c);
+    const p = createPlayer(0, 0);
+    const states = ['Run', 'Jump', 'DoubleJump', 'Fall', 'Land', 'Attack', 'Walk'] as const;
+    for (let i = 0; i < 3000; i++) {
+      p.state = states[Math.floor(i / 40) % states.length]!;
+      p.stateTime = (i % 40) / 60;
+      p.vx = 7;
+      anim.update(p, 1 / 60);
+    }
+    p.state = 'Idle';
+    anim.update(p, 1 / 60);
+    expect(c.visual.position.y).toBeCloseTo(lift, 6);
+  });
+});

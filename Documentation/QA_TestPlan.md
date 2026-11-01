@@ -31,13 +31,29 @@ Only the owner can mark device or multiplayer tests PASS.
 | QA-W-06 | Portrait viewport | L4 | Rotate overlay (TH + EN) | **PASS** 2026-11-01 |
 | QA-W-07 | `ci.yml` on GitHub | L3 | Green | **PASS** 2026-11-01 (run 41289889671, 23 s) |
 | QA-W-08 | `android-apk.yml`: artifact + Latest APK release | L5 | `WonderJump-latest.apk` in release `apk-latest` | **PASS** 2026-11-01: build 0.1.1, 5.0 MB, 2 m 36 s (run 41289889541) |
-| QA-W-D01 | Install Latest APK on D1 | L6 | Installs, opens in **landscape fullscreen**; rotating 180° flips; portrait stays landscape | NOT RUN |
-| QA-W-D02 | Visual check on D1 | L6 | Faces visible, colours match ArtDirection, no black screen | NOT RUN |
-| QA-W-D03 | Performance on D1 | L6 | HUD FPS ≥ 55 (note the draw count) | NOT RUN |
+| QA-W-D01 | Install Latest APK on D1 | L6 | Installs, opens in **landscape fullscreen** | **PASS** 2026-11-01 (owner screenshot, viewport 832×384) |
+| QA-W-D02 | Visual check on D1 | L6 | Faces visible, colours match ArtDirection, no black screen | **PASS** 2026-11-01 |
+| QA-W-D03 | Performance on D1 | L6 | HUD FPS ≥ 55 (note the draw count) | **PASS** 2026-11-01: 120 FPS, 195 draws |
 | QA-W-D04 | Tap each of the 6 characters | L6 | Hop + correct card each time | NOT RUN |
 | QA-W-D05 | Airplane mode | L6 | App starts normally (no network needed) | NOT RUN |
 
-## 4. Later phases (outline)
+## 4. Phase 1 — Movement & Controls
+| ID | Check | Level | Expected | Status |
+|---|---|---|---|---|
+| QA-1-01 | Motor tests (21): apex = designed height ±5 %, variable height, single double jump, coyote, buffer, bonk, one-way, carry, kill plane, states, determinism | L3 | All pass | **PASS** 2026-11-01 |
+| QA-1-02 | Level tests: playground valid; 4 m gap crossable with one jump; 5 m wall needs a double jump | L3 | All pass | **PASS** 2026-11-01 |
+| QA-1-03 | Joystick maths (4) + animator drift regression | L3 | All pass | **PASS** 2026-11-01 |
+| QA-1-04 | Headless: menu → tap Riku → ▶ Play | L4 | Level starts with Riku | **PASS** |
+| QA-1-05 | Headless: pointer drag on the joystick | L4 | Player runs right (state Run) | **PASS** |
+| QA-1-06 | Headless: Space, Space → DoubleJump visible in frame | L4 | Character fully on screen | **PASS** (after camera + animator fixes) |
+| QA-1-07 | Headless: stand on the moving platform | L4 | Carried with the platform, grounded on m0 | **PASS** |
+| QA-1-08 | Headless: J → Attack, reach portal → clear panel | L4 | Attack state; "ผ่านด่านทดสอบ!" panel with time/items/falls | **PASS** |
+| QA-1-D01 | Device: joystick feels responsive; walk with a small tilt, run with a full tilt | L6 | Owner judgement | NOT RUN |
+| QA-1-D02 | Device: jump over the gap, double jump onto the wall, ride the moving platform, reach the portal | L6 | Possible without frustration | NOT RUN |
+| QA-1-D03 | Device: two thumbs at once (joystick + jump) | L6 | Both register | NOT RUN |
+| QA-1-D04 | Device: FPS in the level | L6 | ≥ 55 | NOT RUN |
+
+## 5. Later phases (outline)
 | Phase | Themes |
 |---|---|
 | 1 | Joystick dead-zone/size, jump buffer/coyote, double jump height, one-way/moving platforms, 60 FPS |
@@ -46,5 +62,5 @@ Only the owner can mark device or multiplayer tests PASS.
 | 6 | Save survives restart, corrupt save fallback |
 | 8 | Memory, thermal 20-min run, battery, low-end device |
 
-## 5. Unity Phase 0 history
+## 6. Unity Phase 0 history
 Unity QA rows (generator, GameCI) are on branch `archive/unity-phase0`. Final state: GameCI licence activation **FAIL/BLOCKED** (`TimeStamp validation failed`). Unity code was never compiled in a real editor.

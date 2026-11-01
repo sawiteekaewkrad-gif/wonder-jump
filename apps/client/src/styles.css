@@ -89,3 +89,117 @@ html, body {
 @media (orientation: portrait) {
   .rotate { display: flex; }
 }
+
+/* ---------- menu card button / level UI ---------- */
+.card { pointer-events: auto; }
+.card.hidden { pointer-events: none; }
+.card button, .clear button {
+  margin-top: 8px;
+  padding: 8px 18px;
+  border: 2px solid var(--gold);
+  border-radius: 999px;
+  background: linear-gradient(135deg, var(--purple), var(--purple-deep));
+  color: #fff;
+  font: inherit;
+  font-weight: 700;
+  font-size: 15px;
+}
+.hud.compact { font-size: 12px; padding: 6px 10px; }
+.hidden { display: none !important; }
+.card.hidden { display: block !important; }
+
+.top-btn {
+  position: fixed;
+  top: max(10px, env(safe-area-inset-top));
+  right: max(12px, env(safe-area-inset-right));
+  padding: 6px 12px;
+  border-radius: 12px;
+  background: var(--card);
+  border: 2px solid var(--gold);
+  font-size: 14px;
+  font-weight: 700;
+  z-index: 5;
+}
+
+.clear {
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  padding: 16px 24px;
+  border-radius: 18px;
+  background: var(--card);
+  border: 3px solid var(--gold);
+  text-align: center;
+  z-index: 6;
+}
+.clear h2 { margin: 0 0 6px; color: var(--purple-deep); }
+.clear .row { display: flex; gap: 10px; justify-content: center; }
+
+/* ---------- Crystal Virtual Joystick + buttons ---------- */
+.controls { position: fixed; inset: 0; pointer-events: none; z-index: 4; }
+.stick-zone {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 45%;
+  height: 75%;
+  pointer-events: auto;
+  touch-action: none;
+}
+.stick-base {
+  position: absolute;
+  width: calc(var(--r) * 2);
+  height: calc(var(--r) * 2);
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.18) 0 38%, transparent 39%),
+    radial-gradient(circle at 35% 30%, rgba(167, 120, 255, 0.85), rgba(59, 24, 128, 0.85));
+  border: 4px solid var(--gold);
+  box-shadow: 0 0 0 3px rgba(59, 24, 128, 0.6), 0 6px 18px rgba(59, 24, 128, 0.45), inset 0 0 18px rgba(255, 210, 90, 0.35);
+  transition: opacity 0.15s;
+}
+.stick-base.idle { opacity: 0.45; }
+.stick-knob {
+  position: absolute;
+  left: calc(50% - 26px);
+  top: calc(50% - 26px);
+  width: 52px;
+  height: 52px;
+  border-radius: 10px;
+  transform: rotate(45deg);
+  background: linear-gradient(135deg, #e9d8ff 0%, #a56bff 35%, #6b2fd1 65%, #39c6f0 100%);
+  border: 3px solid var(--gold);
+  box-shadow: 0 0 14px rgba(160, 110, 255, 0.9), inset 0 0 8px rgba(255, 255, 255, 0.7);
+}
+.btn {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  pointer-events: auto;
+  touch-action: none;
+  color: #fff;
+  font-weight: 900;
+  border: 4px solid var(--gold);
+  box-shadow: 0 0 0 3px rgba(59, 24, 128, 0.6), 0 6px 16px rgba(59, 24, 128, 0.45);
+  transition: transform 0.06s;
+}
+.btn.down { transform: scale(0.9); filter: brightness(1.2); }
+.btn-jump {
+  right: max(26px, env(safe-area-inset-right));
+  bottom: max(26px, env(safe-area-inset-bottom));
+  width: 104px;
+  height: 104px;
+  font-size: 46px;
+  background: radial-gradient(circle at 35% 30%, #8fd3ff, #2e5fd6 70%);
+}
+.btn-attack {
+  right: calc(max(26px, env(safe-area-inset-right)) + 118px);
+  bottom: max(36px, env(safe-area-inset-bottom));
+  width: 78px;
+  height: 78px;
+  font-size: 34px;
+  background: radial-gradient(circle at 35% 30%, #c79bff, #5a24b8 70%);
+}

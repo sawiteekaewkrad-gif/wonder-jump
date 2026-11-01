@@ -58,11 +58,11 @@ InputFrame (joystick/keys/test) ─► Motor.step(state, input, dt, level)   [sh
 | IDs / catalog | `shared/ids.ts`, `shared/catalog.ts` | ✅ ported + tests | Level data schema (P1) |
 | Authority | `shared/authority.ts` | ✅ `SimRole`, `hasSharedAuthority` | Server rooms (P2) |
 | Collectibles | `shared/collectibles.ts` | ✅ collect-once, authority-gated, tested | Network request path (P2/P4) |
-| Movement | `shared/player.ts` | ✅ settings, gravity/jump/double-jump maths, 12 states, `InputFrame` | Motor + collision (P1) |
+| Movement | `shared/player.ts`, `shared/motor.ts` | ✅ settings + maths; **P1: deterministic fixed-step motor (60 Hz) with AABB collision, one-way, moving-platform carry, coyote/buffer, double jump, attack** | Server reuse (P2) |
 | Save | `shared/save.ts` | ✅ schema + sanitising loader | Storage adapter (P6) |
 | Rendering | `client/render/*` | ✅ shared geometries, toon materials, chibi + asset builders | GLB loader + AnimationMixer (P7) |
-| Scenes | `client/scenes/showcase.ts` | ✅ showcase, tap-to-hop, character card | Level scene (P1) |
-| Input | — | — | Crystal Joystick + Jump/Attack buttons (P1) |
+| Scenes | `client/scenes/showcase.ts`, `client/scenes/level.ts` | ✅ showcase = menu; **P1: level scene, interpolated rendering, keep-in-frame camera, pickups (offline authority), course clear** | Co-op scene (P2) |
+| Input | `client/input/controls.ts` | **P1: Crystal Joystick (floating, dead-zone), Jump/Attack buttons, keyboard → `InputFrame`** | Settings UI (P6) |
 | Network | — | — | `apps/server` + client netcode (P2) |
 
 ## 4. Co-op (Phase 2 design)
